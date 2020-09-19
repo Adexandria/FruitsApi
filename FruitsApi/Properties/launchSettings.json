@@ -1,0 +1,31 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:56770",
+      "sslPort": 0
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchUrl": "api/fruits",
+      "environmentVariables": {
+        "COMPUTER_VISION_SUBSCRIPTION_KEY": "9bc28e9c20c5438baefd97b4e06564c5",
+        "COMPUTER_VISION_ENDPOINT": "https://fruitsscan.cognitiveservices.azure.com/",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "FruitsApi": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "weatherforecast",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    }
+  }
+}

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Builder;
@@ -31,22 +32,27 @@ namespace FruitsApi.Controllers
         // Close/reopen your project for them to take effect.
         static string subscriptionKey = Environment.GetEnvironmentVariable("COMPUTER_VISION_SUBSCRIPTION_KEY");
         static string endpoint = Environment.GetEnvironmentVariable("COMPUTER_VISION_ENDPOINT");
-        public static IHostingEnvironment _environment;
+
         string uriBase = endpoint + "vision/v3.0/analyze";
-        public Fruits(IHostingEnvironment environment)
-        {
-            _environment = environment;
-        }
+        
         /*
         * AUTHENTICATE
         * Creates a Computer Vision client used by each example.
         */
         [HttpPost]
         public async Task<IActionResult> Post([FromForm] IFormFile file)
-        {
-          var details = await MakeAnalysisRequest(file.FileName);
-            return Ok(details);
-        }
+        {       
+                 if(file == null)
+            {
+                return this.StatusCode(StatusCodes.Status404NotFound, "file not found");
+            }
+            string details = await MakeAnalysisRequest(file.FileName);
+            var fruitName = ProcessAnalysisResult(details);
+            var fruitProperties = await GetProperties(fruitName);
+            return Ok(fruitProperties);
+           
+            
+        }       
         public async Task<string> MakeAnalysisRequest(string image)
         { 
           
@@ -75,7 +81,18 @@ namespace FruitsApi.Controllers
                 return e.Message;
             }
         }
-
+        public async Task<string> GetProperties(string name)
+        {
+            HttpClient client = new HttpClient();
+            string uri = "https://www.fruityvice.com";
+            string requestParameter = $"/api/fruit/{name}";
+            string uriBase = uri + requestParameter;
+            HttpResponseMessage httpResponse;
+            httpResponse = await client.GetAsync(uriBase);
+            string contentString = await httpResponse.Content.ReadAsStringAsync();
+            var newContent = JToken.Parse(contentString).ToString();
+            return newContent;
+        }
         private byte[] GetImageAsByteArray(string fileName)
         {
             using (FileStream fileStream = new FileStream(fileName,FileMode.Open,FileAccess.Read))
@@ -85,7 +102,37 @@ namespace FruitsApi.Controllers
 
             }
         }
+        private static string ProcessAnalysisResult(string result)
+        { 
+            var resultSplit = result.Split(',', '\r', '\n', '\"', '{', '}', ' ', ':', '[', ']');
+            var newResults =resultSplit.Skip(20).Take(40).ToArray();
+            var newName = newResults.ElementAt(10);
+            if (newName == "fruit")
+            {
+            var newresult = resultSplit.Skip(70).Take(20).ToArray();
+            var name = newresult.ElementAt(17);
+            if(name == "")
+            {
+                for (int i = 1; i < newresult.Length - 1;)
+                {
+                    if (newresult[i] == "")
+                    {
+                        i++;
+                    }
+                    else
+                    {
+                        return newresult[i];
+                    }
+                }
+            }
+            return name;
+                 
+              
+            }
 
+            return newName;
+        }
+      
          
     }
 }

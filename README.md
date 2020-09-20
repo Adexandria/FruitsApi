@@ -10,6 +10,7 @@
 - using Microsoft.AspNetCore.Http
 ## Documentation
 The API consists of one function.The function is used to upload an image for processing. 
+#### On Local
 - POST http://localhost:56770/api/fruits
  #### How it works
 - An image is uploaded using the post method, the image is converted into byte data and sent to the computer vision to interpret. The computer vision sends back the data , the data is processed and sent to the open source FruityVice to return the properties.

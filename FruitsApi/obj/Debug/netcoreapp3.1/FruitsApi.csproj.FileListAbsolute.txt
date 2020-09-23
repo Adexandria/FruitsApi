@@ -26,5 +26,12 @@ C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\bin\Debug\netcoreapp3.1\Microso
 C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\bin\Debug\netcoreapp3.1\Microsoft.Rest.ClientRuntime.Azure.dll
 C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
 C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\bin\Debug\netcoreapp3.1\FruitsApi.xml
+C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\bin\Debug\netcoreapp3.1\Microsoft.OpenApi.dll
+C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Annotations.dll
 C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\obj\Debug\netcoreapp3.1\FruitsApi.csproj.CoreCompileInputs.cache
+C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\obj\Debug\netcoreapp3.1\FruitsApi.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\HP 650\source\repos\FruitsApi\FruitsApi\obj\Debug\netcoreapp3.1\FruitsApi.MvcApplicationPartsAssemblyInfo.cache

@@ -11,7 +11,8 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchUrl": "api/fruits",
+      "launchBrowser": true,
+      "launchUrl": "index.html",
       "environmentVariables": {
         "COMPUTER_VISION_SUBSCRIPTION_KEY": "9bc28e9c20c5438baefd97b4e06564c5",
         "COMPUTER_VISION_ENDPOINT": "https://fruitsscan.cognitiveservices.azure.com/",

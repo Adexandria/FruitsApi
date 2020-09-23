@@ -12,10 +12,7 @@ using System.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing.Constraints;
-using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
-using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
-using Microsoft.Extensions.Hosting;
+using Swashbuckle.AspNetCore.Annotations;
 using Newtonsoft.Json.Linq;
 
 
@@ -34,13 +31,17 @@ namespace FruitsApi.Controllers
         static string endpoint = Environment.GetEnvironmentVariable("COMPUTER_VISION_ENDPOINT");
 
         string uriBase = endpoint + "vision/v3.0/analyze";
-        
+
         /*
         * AUTHENTICATE
         * Creates a Computer Vision client used by each example.
         */
-        [HttpPost]
-        public async Task<IActionResult> Post([FromForm] IFormFile file)
+        [SwaggerOperation("PostImage")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+     
+        [HttpPost("PostImage")]
+        public async Task<IActionResult> Post(IFormFile file)
         {       
                  if(file == null)
             {
@@ -53,7 +54,8 @@ namespace FruitsApi.Controllers
            
             
         }       
-        public async Task<string> MakeAnalysisRequest(string image)
+        [NonAction]
+        private async Task<string> MakeAnalysisRequest(string image)
         { 
           
             try
@@ -81,7 +83,8 @@ namespace FruitsApi.Controllers
                 return e.Message;
             }
         }
-        public async Task<string> GetProperties(string name)
+        [NonAction]
+        private async Task<string> GetProperties(string name)
         {
             HttpClient client = new HttpClient();
             string uri = "https://www.fruityvice.com";

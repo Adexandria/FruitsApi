@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace FruitsApi.Model
 {
-    public class Files 
-    { 
+    public class Analysis 
+    {
+            public List<Tag> Tags { get; set; }
     }
 }

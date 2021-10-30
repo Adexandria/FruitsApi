@@ -1,6 +1,7 @@
 ﻿using FruitsApi.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -18,14 +19,13 @@ namespace FruitsApi.Controller
     {
         private readonly IBlob blob;
 
-        readonly static string computerVisionSubscriptionKey = Environment.GetEnvironmentVariable("COMPUTER_VISION_SUBSCRIPTION_KEY");
-        readonly static string computerVisonEndpoint = Environment.GetEnvironmentVariable("COMPUTER_VISION_ENDPOINT");
-        readonly string computerVisionUriBase = computerVisonEndpoint + "vision/v3.0/analyze";
+        readonly IConfiguration configuration;
 
-     
-        public TextToString(IBlob blob)
+
+        public TextToString(IBlob blob, IConfiguration configuration)
         {
             this.blob = blob;
+            this.configuration = configuration;
         }
       
         [NonAction]
@@ -44,7 +44,7 @@ namespace FruitsApi.Controller
 
                 string analyzedDetails = await MakeAnalysisRequest(downloadedfile);
                 Analysis analysis = JsonConvert.DeserializeObject<Analysis>(analyzedDetails);
-                var fruitname = GetFruitName(analysis);
+                var fruitname = await GetFruitName(analysis);
                 return fruitname;
             }
             catch (Exception e)
@@ -60,9 +60,9 @@ namespace FruitsApi.Controller
         {
             try
             {
-                var client = GetClient(computerVisionSubscriptionKey);
+                var client = GetClient();
                 string requestParameters = "visualFeatures=Tags";
-                string uri = computerVisionUriBase + "?" + requestParameters;
+                string uri = configuration["Endpoint"] + "vision/v3.2/analyze" + "?" + requestParameters;
                 HttpResponseMessage httpResponse;
                 using (ByteArrayContent Bytecontent = new ByteArrayContent(file))
                 {
@@ -81,32 +81,51 @@ namespace FruitsApi.Controller
         }
       
         [NonAction]
-        private HttpClient GetClient(string key)
+        private HttpClient GetClient()
         {
             HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
+            var key = configuration["SubscriptionKey"];
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key",key );
             return client;
         }
 
         [NonAction]
-        private string GetFruitName(Analysis analysis)
+        private async Task<string> GetFruitName(Analysis analysis)
         {
+            var names = analysis.Tags.TakeWhile(s => s.Confidence >= 0.90).Select(s=>s.Name).ToList();
+            var content = await GetAllFruits();
+            IEnumerable <Description> fruits = JsonConvert.DeserializeObject<IEnumerable<Description>>(content);
+            var fruitNames = fruits.Select(s => s.Name).ToList();
             int left = 0;
-            int right = analysis.Tags.Count;
+            int right = names.Count;
             while(left < right)
             {
-                if(analysis.Tags[left].name == "fruit" || analysis.Tags[left].name == "natural foods" 
-                    || analysis.Tags[left].name == "food")
+                var name = names[left];
+                if (name == "grape")
                 {
-                    left++;
+                    name = "grapes";
                 }
-                else
+                if (fruitNames.Contains(name,StringComparer.OrdinalIgnoreCase))
                 {
-                    return analysis.Tags[left].name;
+                    return name;
                 }
-            }
+                left++;
+            } 
             return null;
         }
 
+        private async Task<string> GetAllFruits()
+        {
+            HttpClient client = new HttpClient();
+            string uri = "https://www.fruityvice.com";
+
+            string requestParameter = $"/api/fruit/all";
+            string uriBase = uri + requestParameter;
+            HttpResponseMessage httpResponse;
+            httpResponse = await client.GetAsync(uriBase);
+            string contentString = await httpResponse.Content.ReadAsStringAsync();
+            var newContent = JToken.Parse(contentString).ToString();
+            return newContent;
+        }
     }
 }

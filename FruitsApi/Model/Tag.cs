@@ -2,7 +2,8 @@
 {
     public class Tag
     {
-        public string name { get; set; }
-        public double confidence { get; set; }
+        public string Name { get; set; }
+        public double Confidence { get; set; }
+
     }
 }

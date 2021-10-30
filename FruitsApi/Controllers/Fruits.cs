@@ -43,18 +43,27 @@ namespace FruitsApi.Controllers
      
         [HttpPost("PostImage")]
         public async Task<IActionResult> Post(IFormFile file)
-        {       
-            if(file == null)
+        {
+            try
             {
-                return this.StatusCode(StatusCodes.Status404NotFound, "file not found");
-            } 
-            var fruitName = await textToString.Post(file);
-            if(fruitName == null)
-            {
-                return BadRequest("Unable to collect data from image, try another image");
+                if (file == null)
+                {
+                    return this.StatusCode(StatusCodes.Status404NotFound, "file not found");
+                }
+                var fruitName = await textToString.Post(file);
+                if (fruitName == null)
+                {
+                    return BadRequest("Fruit not found");
+                }
+                var fruitProperties = await GetProperties(fruitName);
+                return Ok(fruitProperties);
             }
-            var fruitProperties = await GetProperties(fruitName);
-            return Ok(fruitProperties);
+            catch (Exception e)
+            {
+
+               return BadRequest(e.Message);
+            }
+            
 
         }       
         [NonAction]
@@ -62,10 +71,7 @@ namespace FruitsApi.Controllers
         {
             HttpClient client = new HttpClient();
             string uri = "https://www.fruityvice.com";
-            if(name == "grape")
-            {
-                name = "grapes";
-            }
+           
             string requestParameter = $"/api/fruit/{name}";
             string uriBase = uri + requestParameter;
             HttpResponseMessage httpResponse;

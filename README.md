@@ -1,6 +1,6 @@
 # FruitsApi
  A powerful Web api which provides the properties of a fruit. It collects the data from an image and returns the properties.You can use this api to easily identify a particular fruit.
- ## Application
+ # Application
  -  Azure Computer Vision
  -  FruityVice
  -  Image of a fruit
@@ -8,7 +8,7 @@
  -  Azure Web App
  -  Azure Blob Storage
  
- ## Packages
+ # Packages
 - Microsoft.AspNetCore.Mvc
 - using Newtonsoft.Json.Linq
 - SwashBuckle

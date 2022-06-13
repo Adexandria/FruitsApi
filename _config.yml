@@ -1,4 +1,4 @@
 title: Fruits API
 author: Aderibigbe Adeola
 theme: jekyll-theme-slate
-Description: 
+Description: A powerful Web api which provides the properties of a fruit. It collects the data from an image and returns the properties.You can use this api to easily identify a particular fruit.
